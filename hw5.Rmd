@@ -1,0 +1,33 @@
+---
+title: "p8105 hw5"
+author: "Natalie Boychuk"
+date: "11/15/2020"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+```
+
+
+Read in the data 
+```{r}
+  homicide_df = 
+    read_csv("data/homicide-data.csv")
+
+```
+
