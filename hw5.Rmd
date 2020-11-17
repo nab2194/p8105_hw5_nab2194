@@ -7,6 +7,9 @@ output: github_document
 
 ```{r setup, include = FALSE}
 library(tidyverse)
+library(dplyr)
+library(rvest)
+library(purrr)
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .6,
@@ -78,5 +81,20 @@ results_df %>%
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high))
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
+```
+
+##Problem 2 
+
+```{r }
+path_df = 
+  tibble(
+  path = list.files("data/experiment-data")) %>% 
+  mutate(
+    path = str_c("data/experiment-data/", path),
+    data = map(.x = path, ~read_csv(.x))) %>% 
+      separate(path, c("file1","file2","name"), sep = "/") %>% 
+  select(-file1, -file2) %>% 
+  separate(name, c("arm","subject"), sep = "_") %>% 
+  mutate(arm = recode(arm, con = "control", exp = "experimental")) 
 ```
 
