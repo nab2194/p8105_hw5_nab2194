@@ -115,9 +115,14 @@ path_df =
     path = str_c("data/experiment-data/", path),
     data = map(.x = path, ~read_csv(.x))) %>% 
       separate(path, c("file1","file2","name"), sep = "/") %>% 
-  select(-file1, -file2) %>% 
-  separate(name, c("arm","subject"), sep = "_") %>% 
-  mutate(arm = recode(arm, con = "control", exp = "experimental")) 
+      separate(name, c("arm","id","csv")) %>% 
+         mutate(arm = recode(arm, con = "control", exp = "case")) %>% 
+            select(-file1, -file2, -csv) %>% 
+  unnest(data) %>% 
+  pivot_longer(week_1:week_8,
+               names_to = "week",
+               values_to = "observation",
+               names_prefix = "week_")
 ```
 
     ## Parsed with column specification:
