@@ -396,11 +396,11 @@ simfun = function(samp_size = 30, mu, sigma = 5){
 
 ``` r
 prob3_result0 = 
-  rerun(5000, simfun(mu = 0))
+  rerun(5000, simfun(mu = 0)) %>% bind_rows()
 ```
 
 ``` r
-list_sim = list(
+mu = list(
   "result0" = 0,
   "result1" = 1,
   "result2" = 2, 
@@ -412,12 +412,12 @@ list_sim = list(
 
 output = vector("list", length = 5000)
 
-for (i in 1:6) {
-  output[[i]] = rerun(5000, simfun(mu = list_sim[[i]]))
-}
-
-results_list = bind_rows(output)
+results_list = 
+  map(.x = mu, ~rerun(5000, simfun(mu = .x))) %>% 
+  bind_rows() %>% view()
 ```
+
+    ## Warning: Outer names are only allowed for unnamed scalar atomic inputs
 
 ``` r
 power_list =

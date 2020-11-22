@@ -158,11 +158,11 @@ simfun = function(samp_size = 30, mu, sigma = 5){
 
 ```{r trying simulation with mu as 0}
 prob3_result0 = 
-  rerun(5000, simfun(mu = 0))
+  rerun(5000, simfun(mu = 0)) %>% bind_rows()
 ```
 
 ```{r}
-list_sim = list(
+mu = list(
   "result0" = 0,
   "result1" = 1,
   "result2" = 2, 
@@ -174,11 +174,10 @@ list_sim = list(
 
 output = vector("list", length = 5000)
 
-for (i in 1:6) {
-  output[[i]] = rerun(5000, simfun(mu = list_sim[[i]]))
-}
+results_list = 
+  map(.x = mu, ~rerun(5000, simfun(mu = .x))) %>% 
+  bind_rows() %>% view()
 
-results_list = bind_rows(output)
 
 ```
 
@@ -192,6 +191,6 @@ mutate(decision = case_when(
            (mean(decision == "reject"))
   ) 
 
-
 ```
+
 
