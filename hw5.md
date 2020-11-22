@@ -381,18 +381,51 @@ control_plot + case_plot
 ## Problem 3
 
 ``` r
-prob3_t = function(samp_size = 30, mean, sigma = 5) {
+simfun = function(samp_size = 30, mu, sigma = 5){
   
-  prob3_data_a = 
+  prob3_data = 
     tibble(
-      x = rnorm(n = samp_size, mean = mean, sd = sigma)
-    )
+      x = rnorm(n = samp_size, mean = mu, sd = sigma)
+    ) 
   
-   test = 
-     prob3_data_a %>% 
-        mutate(
-      t.test(sample, mu = 0, conf.level = .95) %>% broom::tidy()
-    )
-  
+   ttest = t.test(prob3_data, conf.level = .95) %>% broom::tidy()
+
 }
+
+output = vector("list", length = 5000)
+```
+
+``` r
+prob3_result0 = 
+  rerun(5000, simfun(mu = 0))
+```
+
+``` r
+prob3_result1 = 
+  rerun(5000, simfun(mu = 1))
+```
+
+``` r
+prob3_result2 = 
+  rerun(5000, simfun(mu = 2)) 
+```
+
+``` r
+prob3_result3 = 
+  rerun(5000, simfun(mu = 3)) 
+```
+
+``` r
+prob3_result4 = 
+  rerun(5000, simfun(mu = 4)) 
+```
+
+``` r
+prob3_result5 = 
+  rerun(5000, simfun(mu = 5)) 
+```
+
+``` r
+prob3_result6 = 
+  rerun(5000, simfun(mu = 6))
 ```
