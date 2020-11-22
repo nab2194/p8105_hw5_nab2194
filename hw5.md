@@ -108,7 +108,7 @@ results_df %>%
 \#\#Problem 2
 
 ``` r
-path_df = 
+longstudy_df = 
   tibble(
   path = list.files("data/experiment-data")) %>% 
   mutate(
@@ -345,3 +345,19 @@ path_df =
     ##   week_7 = col_double(),
     ##   week_8 = col_double()
     ## )
+
+``` r
+cases = 
+  longstudy_df %>% 
+  filter(arm == "case") %>% 
+  mutate(as.numeric(week))
+
+controls = 
+  longstudy_df %>% 
+  filter(arm == "control") %>% 
+  mutate(as.numeric(week))
+
+case_plot = ggplot(data = cases, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) 
+
+control_plot = ggplot(data = controls, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) 
+```

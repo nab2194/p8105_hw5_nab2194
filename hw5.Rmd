@@ -10,6 +10,7 @@ library(tidyverse)
 library(dplyr)
 library(rvest)
 library(purrr)
+library(ggplot2)
 set.seed(1)
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -87,7 +88,7 @@ results_df %>%
 ##Problem 2 
 
 ```{r tidying prob2 data }
-path_df = 
+longstudy_df = 
   tibble(
   path = list.files("data/experiment-data")) %>% 
   mutate(
@@ -102,6 +103,23 @@ path_df =
                names_to = "week",
                values_to = "observation",
                names_prefix = "week_")
+
+```
+
+```{r making the prob2 plot}
+cases = 
+  longstudy_df %>% 
+  filter(arm == "case") %>% 
+  mutate(as.numeric(week))
+
+controls = 
+  longstudy_df %>% 
+  filter(arm == "control") %>% 
+  mutate(as.numeric(week))
+
+case_plot = ggplot(data = cases, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) 
+
+control_plot = ggplot(data = controls, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) 
 
 ```
 
