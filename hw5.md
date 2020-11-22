@@ -390,9 +390,8 @@ simfun = function(samp_size = 30, mu, sigma = 5){
   
    ttest = t.test(prob3_data, conf.level = .95) %>% broom::tidy()
 
+   return(ttest)
 }
-
-output = vector("list", length = 5000)
 ```
 
 ``` r
@@ -401,31 +400,32 @@ prob3_result0 =
 ```
 
 ``` r
-prob3_result1 = 
-  rerun(5000, simfun(mu = 1))
+list_sim = list(
+  "result0" = 0,
+  "result1" = 1,
+  "result2" = 2, 
+  "result3" = 3,
+  "result4" = 4,
+  "result5" = 5,
+  "result6" = 6
+)
+
+output = vector("list", length = 5000)
+
+for (i in 1:6) {
+  output[[i]] = rerun(5000, simfun(mu = list_sim[[i]]))
+}
+
+results_list = bind_rows(output)
 ```
 
 ``` r
-prob3_result2 = 
-  rerun(5000, simfun(mu = 2)) 
-```
-
-``` r
-prob3_result3 = 
-  rerun(5000, simfun(mu = 3)) 
-```
-
-``` r
-prob3_result4 = 
-  rerun(5000, simfun(mu = 4)) 
-```
-
-``` r
-prob3_result5 = 
-  rerun(5000, simfun(mu = 5)) 
-```
-
-``` r
-prob3_result6 = 
-  rerun(5000, simfun(mu = 6))
+power_list =
+results_list %>%  
+mutate(decision = case_when(
+  p.value < .05 ~ "reject",
+  p.value > .05 ~ "fail.reject")) %>% 
+  mutate(power = 
+           (mean(decision == "reject"))
+  ) 
 ```
