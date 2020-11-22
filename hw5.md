@@ -353,11 +353,46 @@ cases =
   mutate(as.numeric(week))
 
 controls = 
-  longstudy_df %>% 
+  longstudy_df %>%
   filter(arm == "control") %>% 
   mutate(as.numeric(week))
 
-case_plot = ggplot(data = cases, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) 
+case_plot = ggplot(data = cases, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) + 
+  labs(
+    title = "Observations of Cases by Week",
+    x = "Time (weeks)",
+    y = "Observation"
+  ) + 
+  scale_color_hue(name = "Participant ID")
 
-control_plot = ggplot(data = controls, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) 
+control_plot = ggplot(data = controls, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) + 
+  labs(
+    title = "Observations of Controls by Week",
+    x = "Time (weeks)",
+    y = "Observation"
+  ) + 
+  scale_color_hue(name = "Participant ID")
+
+control_plot + case_plot
+```
+
+<img src="hw5_files/figure-gfm/making the prob2 plots-1.png" width="90%" />
+
+## Problem 3
+
+``` r
+prob3_t = function(samp_size = 30, mean, sigma = 5) {
+  
+  prob3_data_a = 
+    tibble(
+      x = rnorm(n = samp_size, mean = mean, sd = sigma)
+    )
+  
+   test = 
+     prob3_data_a %>% 
+        mutate(
+      t.test(sample, mu = 0, conf.level = .95) %>% broom::tidy()
+    )
+  
+}
 ```
