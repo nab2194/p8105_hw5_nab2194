@@ -107,325 +107,59 @@ results_df %>%
 
 \#\#Problem 2
 
-``` r
-longstudy_df = 
-  tibble(
-  path = list.files("data/experiment-data")) %>% 
-  mutate(
-    path = str_c("data/experiment-data/", path),
-    data = map(.x = path, ~read_csv(.x))) %>% 
-      separate(path, c("file1","file2","name"), sep = "/") %>% 
-      separate(name, c("arm","id","csv")) %>% 
-         mutate(arm = recode(arm, con = "control", exp = "case")) %>% 
-            select(-file1, -file2, -csv) %>% 
-  unnest(data) %>% 
-  pivot_longer(week_1:week_8,
-               names_to = "week",
-               values_to = "observation",
-               names_prefix = "week_")
-```
-
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-    ## Parsed with column specification:
-    ## cols(
-    ##   week_1 = col_double(),
-    ##   week_2 = col_double(),
-    ##   week_3 = col_double(),
-    ##   week_4 = col_double(),
-    ##   week_5 = col_double(),
-    ##   week_6 = col_double(),
-    ##   week_7 = col_double(),
-    ##   week_8 = col_double()
-    ## )
-
-``` r
-cases = 
-  longstudy_df %>% 
-  filter(arm == "case") %>% 
-  mutate(as.numeric(week))
-
-controls = 
-  longstudy_df %>%
-  filter(arm == "control") %>% 
-  mutate(as.numeric(week))
-
-case_plot = ggplot(data = cases, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) + 
-  labs(
-    title = "Observations of Cases by Week",
-    x = "Time (weeks)",
-    y = "Observation"
-  ) + 
-  scale_color_hue(name = "Participant ID")
-
-control_plot = ggplot(data = controls, aes(x = week, y = observation, group = id)) + geom_line(aes(color = id)) + 
-  labs(
-    title = "Observations of Controls by Week",
-    x = "Time (weeks)",
-    y = "Observation"
-  ) + 
-  scale_color_hue(name = "Participant ID")
-
-control_plot + case_plot
-```
-
-<img src="hw5_files/figure-gfm/making the prob2 plots-1.png" width="90%" />
-
 ## Problem 3
 
 ``` r
-simfun = function(samp_size = 30, mu, sigma = 5){
+simfun = function(samp_size = 30, mu = 0, sigma = 5){
   
   prob3_data = 
     tibble(
       x = rnorm(n = samp_size, mean = mu, sd = sigma)
     ) 
   
-   ttest = t.test(prob3_data, conf.level = .95) %>% broom::tidy()
-
-   return(ttest)
+    prob3_ttest = 
+     t.test(prob3_data, conf.level = .95) %>% 
+      broom::tidy()
 }
 ```
 
 ``` r
-prob3_result0 = 
-  rerun(5000, simfun(mu = 0)) %>% bind_rows()
+mu_sim =
+  tibble(
+    mu = c(0, 1, 2, 3, 4, 5, 6)
+  ) %>% 
+  mutate(
+    result = map(.x = mu, ~rerun(5000, simfun(mu = .x))),
+    result_df = map(result, bind_rows)
+  ) 
 ```
 
 ``` r
-mu = list(
-  "result0" = 0,
-  "result1" = 1,
-  "result2" = 2, 
-  "result3" = 3,
-  "result4" = 4,
-  "result5" = 5,
-  "result6" = 6
-)
-
-output = vector("list", length = 5000)
-
-results_list = 
-  map(.x = mu, ~rerun(5000, simfun(mu = .x))) %>% 
-  bind_rows() %>% view()
+unnest(mu_sim, cols = c("result_df"))
 ```
 
-    ## Warning: Outer names are only allowed for unnamed scalar atomic inputs
+    ## # A tibble: 35,000 x 10
+    ##       mu result estimate statistic p.value parameter conf.low conf.high method
+    ##    <dbl> <list>    <dbl>     <dbl>   <dbl>     <dbl>    <dbl>     <dbl> <chr> 
+    ##  1     0 <list…    0.412     0.489  0.629         29   -1.31     2.14   One S…
+    ##  2     0 <list…    0.664     0.914  0.368         29   -0.821    2.15   One S…
+    ##  3     0 <list…    0.551     0.629  0.534         29   -1.24     2.34   One S…
+    ##  4     0 <list…    0.567     0.704  0.487         29   -1.08     2.21   One S…
+    ##  5     0 <list…   -1.65     -1.96   0.0599        29   -3.37     0.0731 One S…
+    ##  6     0 <list…    1.19      1.23   0.229         29   -0.786    3.16   One S…
+    ##  7     0 <list…    0.334     0.337  0.738         29   -1.69     2.36   One S…
+    ##  8     0 <list…   -1.19     -1.29   0.209         29   -3.08     0.703  One S…
+    ##  9     0 <list…    0.122     0.144  0.887         29   -1.62     1.86   One S…
+    ## 10     0 <list…    0.684     0.728  0.472         29   -1.24     2.60   One S…
+    ## # … with 34,990 more rows, and 1 more variable: alternative <chr>
 
 ``` r
-power_list =
-results_list %>%  
+power_list = 
+  mu_sim %>% 
 mutate(decision = case_when(
-  p.value < .05 ~ "reject",
-  p.value > .05 ~ "fail.reject")) %>% 
+  "p.value" < .05 ~ "reject",
+  "p.value" > .05 ~ "fail.reject")) %>% 
   mutate(power = 
            (mean(decision == "reject"))
-  ) 
+  ) %>% view()
 ```

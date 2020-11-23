@@ -88,7 +88,7 @@ results_df %>%
 
 ##Problem 2 
 
-```{r tidying prob2 data }
+```{r eval = FALSE, echo = FALSE }
 longstudy_df = 
   tibble(
   path = list.files("data/experiment-data")) %>% 
@@ -107,7 +107,7 @@ longstudy_df =
 
 ```
 
-```{r making the prob2 plots}
+```{r eval = FALSE, echo = FALSE}
 cases = 
   longstudy_df %>% 
   filter(arm == "case") %>% 
@@ -142,55 +142,42 @@ control_plot + case_plot
 
 ```{r setting up function}
 
-simfun = function(samp_size = 30, mu, sigma = 5){
+simfun = function(samp_size = 30, mu = 0, sigma = 5){
   
   prob3_data = 
     tibble(
       x = rnorm(n = samp_size, mean = mu, sd = sigma)
     ) 
   
-   ttest = t.test(prob3_data, conf.level = .95) %>% broom::tidy()
-
-   return(ttest)
+    prob3_ttest = 
+     t.test(prob3_data, conf.level = .95) %>% 
+      broom::tidy()
 }
 
 ```
 
-```{r trying simulation with mu as 0}
-prob3_result0 = 
-  rerun(5000, simfun(mu = 0)) %>% bind_rows()
+```{r}
+mu_sim =
+  tibble(
+    mu = c(0, 1, 2, 3, 4, 5, 6)
+  ) %>% 
+  mutate(
+    result = map(.x = mu, ~rerun(5000, simfun(mu = .x))),
+    result_df = map(result, bind_rows)
+  ) 
 ```
 
 ```{r}
-mu = list(
-  "result0" = 0,
-  "result1" = 1,
-  "result2" = 2, 
-  "result3" = 3,
-  "result4" = 4,
-  "result5" = 5,
-  "result6" = 6
-)
+unnest(mu_sim, cols = c("result_df"))
 
-output = vector("list", length = 5000)
-
-results_list = 
-  map(.x = mu, ~rerun(5000, simfun(mu = .x))) %>% 
-  bind_rows() %>% view()
-
-
-```
-
-```{r}
-power_list =
-results_list %>%  
+power_list = 
+  mu_sim %>% 
 mutate(decision = case_when(
-  p.value < .05 ~ "reject",
-  p.value > .05 ~ "fail.reject")) %>% 
+  "p.value" < .05 ~ "reject",
+  "p.value" > .05 ~ "fail.reject")) %>% 
   mutate(power = 
            (mean(decision == "reject"))
-  ) 
-
+  ) %>% view()
 ```
 
 
