@@ -30,6 +30,7 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ## Problem 1 
+
 Read in the data 
 ```{r}
   homicide_df = 
@@ -45,6 +46,9 @@ Read in the data
   filter(city_state != "Tulsa_AL")
 
 ```
+
+### Description of the Raw Data
+The raw data from the Washington Post homicide dataset includes `r nrow(homicide_df)` rows and `r ncol(homicide_df)` columns and is focused on unsolved homicides throughout the United States. The dataset includes the victims' first and last names, their race, age, sex, the reported date of the homicide, city and state in which the homicide occurred, as well as a unique ID. The data is already relatively clean.
 
 ```{r}
 aggregate_df = 
@@ -86,9 +90,9 @@ results_df %>%
 
 ```
 
-##Problem 2 
+## Problem 2 
 
-```{r eval = FALSE, echo = FALSE }
+```{r }
 longstudy_df = 
   tibble(
   path = list.files("data/experiment-data")) %>% 
@@ -107,7 +111,7 @@ longstudy_df =
 
 ```
 
-```{r eval = FALSE, echo = FALSE}
+```{r }
 cases = 
   longstudy_df %>% 
   filter(arm == "case") %>% 
@@ -162,7 +166,7 @@ mu_sim =
     mu = c(0, 1, 2, 3, 4, 5, 6)
   ) %>% 
   mutate(
-    result = map(.x = mu, ~rerun(5000, simfun(mu = .x))),
+    result = map(.x = mu, ~rerun(5, simfun(mu = .x))),
     result_df = map(result, bind_rows)
   ) 
 ```
@@ -183,6 +187,7 @@ mutate(decision = case_when(
 
 ```{r bullet point 1 for problem 3}
 power_list %>% 
+  group_by(mu) %>% 
   ggplot(aes(x = mu, y = power_var)) +
   geom_point() + 
   labs(
@@ -193,10 +198,10 @@ power_list %>%
 ```
 
 ```{r bullet point 2 for problem 3}
-unnest(power_list, result_df)
-
 plot1 = 
-  power_list  %>% 
+  unnest(power_list, result_df) %>% 
+  group_by(mu) %>% 
+  #summarise(mean_observed = mean(estimate)) %>% 
   ggplot(aes(x = mu, y = "estimate")) + 
   geom_point() + 
   labs(
@@ -207,9 +212,11 @@ plot1 =
 
 plot2 = 
   power_list %>% 
+  group_by(mu) %>% 
   filter(
     decision == "fail.reject"
   ) %>% 
+  #summarise(mean_reject = mean(estimate)) %>% 
   ggplot(aes(x = mu, y = "estimate")) + 
   geom_point() + 
    labs(
@@ -222,5 +229,10 @@ plot1 + plot2
 
 ```
 
+I am really sorry I couldn't get the plots to work - I tried my best but my brain is fried now :( 
+
+If these plots had worked, I would assume that our first plot would show that as the effect size gets larger, the power would also increase.
+
+The second plot would probably show that the sample average of mu across tests for which the null is rejected is different from the true value of mu, because these are tests in which we have rejected the null hypothesis. To reject the null hypothesis means that there is sufficient evidence to suggest that the observed value is significantly different from mu.
 
 
