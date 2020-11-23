@@ -175,9 +175,20 @@ power_list =
 mutate(decision = case_when(
   "p.value" < .05 ~ "reject",
   "p.value" > .05 ~ "fail.reject")) %>% 
-  mutate(power = 
+  mutate(power_var = 
            (mean(decision == "reject"))
-  ) %>% view()
+  ) 
+
 ```
 
+```{r}
+power_list %>% 
+  ggplot(aes(x = mu, y = power_var)) +
+  geom_point() + 
+  labs(
+    title = "Relationship Between Effect Size and True Mean (Mu)",
+    x = "True Mean", 
+    y = "Power"
+  )
+```
 
