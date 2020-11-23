@@ -181,7 +181,7 @@ mutate(decision = case_when(
 
 ```
 
-```{r}
+```{r bullet point 1 for problem 3}
 power_list %>% 
   ggplot(aes(x = mu, y = power_var)) +
   geom_point() + 
@@ -191,4 +191,36 @@ power_list %>%
     y = "Power"
   )
 ```
+
+```{r bullet point 2 for problem 3}
+unnest(power_list, result_df)
+
+plot1 = 
+  power_list  %>% 
+  ggplot(aes(x = mu, y = "estimate")) + 
+  geom_point() + 
+  labs(
+    title = "Relationship between True Mean (mu) and Estimated Mean",
+    x = "True mean",
+    y = "Estimated mean"
+  )
+
+plot2 = 
+  power_list %>% 
+  filter(
+    decision == "fail.reject"
+  ) %>% 
+  ggplot(aes(x = mu, y = "estimate")) + 
+  geom_point() + 
+   labs(
+    title = "Relationship between True Mean (mu) and Estimated Mean",
+    x = "True mean",
+    y = "Estimated mean"
+  )
+
+plot1 + plot2
+
+```
+
+
 

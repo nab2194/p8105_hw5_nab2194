@@ -159,7 +159,69 @@ power_list =
 mutate(decision = case_when(
   "p.value" < .05 ~ "reject",
   "p.value" > .05 ~ "fail.reject")) %>% 
-  mutate(power = 
+  mutate(power_var = 
            (mean(decision == "reject"))
-  ) %>% view()
+  ) 
 ```
+
+``` r
+power_list %>% 
+  ggplot(aes(x = mu, y = power_var)) +
+  geom_point() + 
+  labs(
+    title = "Relationship Between Effect Size and True Mean (Mu)",
+    x = "True Mean", 
+    y = "Power"
+  )
+```
+
+<img src="hw5_files/figure-gfm/bullet point 1 for problem 3-1.png" width="90%" />
+
+``` r
+unnest(power_list, result_df)
+```
+
+    ## # A tibble: 35,000 x 12
+    ##       mu result estimate statistic p.value parameter conf.low conf.high method
+    ##    <dbl> <list>    <dbl>     <dbl>   <dbl>     <dbl>    <dbl>     <dbl> <chr> 
+    ##  1     0 <list…    0.412     0.489  0.629         29   -1.31     2.14   One S…
+    ##  2     0 <list…    0.664     0.914  0.368         29   -0.821    2.15   One S…
+    ##  3     0 <list…    0.551     0.629  0.534         29   -1.24     2.34   One S…
+    ##  4     0 <list…    0.567     0.704  0.487         29   -1.08     2.21   One S…
+    ##  5     0 <list…   -1.65     -1.96   0.0599        29   -3.37     0.0731 One S…
+    ##  6     0 <list…    1.19      1.23   0.229         29   -0.786    3.16   One S…
+    ##  7     0 <list…    0.334     0.337  0.738         29   -1.69     2.36   One S…
+    ##  8     0 <list…   -1.19     -1.29   0.209         29   -3.08     0.703  One S…
+    ##  9     0 <list…    0.122     0.144  0.887         29   -1.62     1.86   One S…
+    ## 10     0 <list…    0.684     0.728  0.472         29   -1.24     2.60   One S…
+    ## # … with 34,990 more rows, and 3 more variables: alternative <chr>,
+    ## #   decision <chr>, power_var <dbl>
+
+``` r
+plot1 = 
+  power_list  %>% 
+  ggplot(aes(x = mu, y = "estimate")) + 
+  geom_point() + 
+  labs(
+    title = "Relationship between True Mean (mu) and Estimated Mean",
+    x = "True mean",
+    y = "Estimated mean"
+  )
+
+plot2 = 
+  power_list %>% 
+  filter(
+    decision == "fail.reject"
+  ) %>% 
+  ggplot(aes(x = mu, y = "estimate")) + 
+  geom_point() + 
+   labs(
+    title = "Relationship between True Mean (mu) and Estimated Mean",
+    x = "True mean",
+    y = "Estimated mean"
+  )
+
+plot1 + plot2
+```
+
+<img src="hw5_files/figure-gfm/bullet point 2 for problem 3-1.png" width="90%" />
